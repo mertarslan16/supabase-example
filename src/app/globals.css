@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* FullCalendar Custom Styles */
+.fc {
+  font-family: inherit;
+}
+
+.fc .fc-button {
+  text-transform: capitalize;
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.fc .fc-button:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.fc .fc-button-active {
+  background-color: #1e40af !important;
+  border-color: #1e40af !important;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.fc-event {
+  cursor: pointer;
+  border: none !important;
+}
+
+.fc-event:hover {
+  opacity: 0.9;
+}
+
+.fc-daygrid-day-number {
+  color: #374151;
+}
+
+.fc-col-header-cell-cushion {
+  color: #6b7280;
+  font-weight: 600;
+}
