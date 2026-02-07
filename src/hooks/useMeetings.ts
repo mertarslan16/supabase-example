@@ -20,6 +20,9 @@ export function useMeetings(workspaceId: string) {
       if (error) throw error
       if (!meetings || meetings.length === 0) return []
 
+      // Mevcut kullanıcıyı al
+      const { data: { user: currentUser } } = await supabase.auth.getUser()
+
       // Her meeting için participants'ı çek
       const meetingsWithParticipants = await Promise.all(
         meetings.map(async (meeting) => {
@@ -28,9 +31,19 @@ export function useMeetings(workspaceId: string) {
             .select('*')
             .eq('meeting_id', meeting.id)
 
+          const participantsWithEmail = (participants || []).map((p) => {
+            if (p.is_external && p.external_email) {
+              return { ...p, user: { id: p.id, email: p.external_email } }
+            }
+            if (currentUser && p.user_id === currentUser.id) {
+              return { ...p, user: { id: currentUser.id, email: currentUser.email } }
+            }
+            return { ...p, user: { id: p.user_id, email: null } }
+          })
+
           return {
             ...meeting,
-            meeting_participants: participants || []
+            meeting_participants: participantsWithEmail
           }
         })
       )

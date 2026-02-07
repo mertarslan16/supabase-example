@@ -95,12 +95,11 @@ export default function MeetingsListPage({
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">{meeting.title}</h3>
                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                          meeting.meeting_type === 'zoom' ? 'bg-blue-100 text-blue-800' :
                           meeting.meeting_type === 'google_meet' ? 'bg-green-100 text-green-800' :
-                          meeting.meeting_type === 'teams' ? 'bg-purple-100 text-purple-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {meeting.meeting_type}
+                          {meeting.meeting_type === 'google_meet' ? 'Google Meet' :
+                           meeting.meeting_type === 'teams' ? 'Teams' : meeting.meeting_type}
                         </span>
                       </div>
                       {meeting.description && (
@@ -120,15 +119,15 @@ export default function MeetingsListPage({
                           {meeting.meeting_participants?.length || 0} katılımcı
                         </span>
                       </div>
-                      {meeting.meeting_url && (
+                      {(meeting.google_meet_link || meeting.meeting_url) && (
                         <a
-                          href={meeting.meeting_url}
+                          href={meeting.google_meet_link || meeting.meeting_url!}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 mt-3 text-sm text-blue-600 hover:text-blue-700"
+                          className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                           </svg>
                           Toplantıya Katıl
                         </a>

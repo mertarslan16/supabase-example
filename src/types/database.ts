@@ -92,10 +92,12 @@ export interface Database {
           description: string | null
           start_time: string
           end_time: string
-          meeting_type: 'zoom' | 'google_meet' | 'teams' | 'other'
+          meeting_type: 'google_meet' 
           meeting_url: string | null
           created_by: string
           created_at: string
+          google_calendar_event_id: string | null
+          google_meet_link: string | null
         }
         Insert: {
           id?: string
@@ -104,10 +106,12 @@ export interface Database {
           description?: string | null
           start_time: string
           end_time: string
-          meeting_type: 'zoom' | 'google_meet' | 'teams' | 'other'
+          meeting_type: 'google_meet' 
           meeting_url?: string | null
           created_by: string
           created_at?: string
+          google_calendar_event_id?: string | null
+          google_meet_link?: string | null
         }
         Update: {
           id?: string
@@ -116,33 +120,76 @@ export interface Database {
           description?: string | null
           start_time?: string
           end_time?: string
-          meeting_type?: 'zoom' | 'google_meet' | 'teams' | 'other'
+          meeting_type?: 'google_meet'
           meeting_url?: string | null
           created_by?: string
           created_at?: string
+          google_calendar_event_id?: string | null
+          google_meet_link?: string | null
         }
       }
       meeting_participants: {
         Row: {
           id: string
           meeting_id: string
-          user_id: string
+          user_id: string | null
           status: 'accepted' | 'declined' | 'pending' | 'maybe'
           created_at: string
+          external_email: string | null
+          is_external: boolean
         }
         Insert: {
           id?: string
           meeting_id: string
-          user_id: string
+          user_id?: string | null
           status?: 'accepted' | 'declined' | 'pending' | 'maybe'
           created_at?: string
+          external_email?: string | null
+          is_external?: boolean
         }
         Update: {
           id?: string
           meeting_id?: string
-          user_id?: string
+          user_id?: string | null
           status?: 'accepted' | 'declined' | 'pending' | 'maybe'
           created_at?: string
+          external_email?: string | null
+          is_external?: boolean
+        }
+      }
+      google_tokens: {
+        Row: {
+          id: string
+          user_id: string
+          access_token: string
+          refresh_token: string
+          token_type: string
+          expires_at: string
+          scope: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          access_token: string
+          refresh_token: string
+          token_type?: string
+          expires_at: string
+          scope?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          access_token?: string
+          refresh_token?: string
+          token_type?: string
+          expires_at?: string
+          scope?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
       email_templates: {
@@ -195,6 +242,8 @@ export type WorkspaceInviteInsert = Database['public']['Tables']['workspace_invi
 export type MeetingInsert = Database['public']['Tables']['meetings']['Insert']
 export type MeetingParticipantInsert = Database['public']['Tables']['meeting_participants']['Insert']
 export type EmailTemplateInsert = Database['public']['Tables']['email_templates']['Insert']
+export type GoogleToken = Database['public']['Tables']['google_tokens']['Row']
+export type GoogleTokenInsert = Database['public']['Tables']['google_tokens']['Insert']
 
 // Extended types with relations
 export type WorkspaceWithMembers = Workspace & {

@@ -8,7 +8,6 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useWorkspace } from '@/hooks/useWorkspaces'
 import { useMeetings, useUpdateMeeting } from '@/hooks/useMeetings'
-import trLocale from '@fullcalendar/core/locales/tr'
 
 export default function WorkspaceCalendarPage({
   params,
@@ -39,9 +38,7 @@ export default function WorkspaceCalendarPage({
     start: meeting.start_time,
     end: meeting.end_time,
     backgroundColor:
-      meeting.meeting_type === 'zoom' ? '#2D8CFF' :
       meeting.meeting_type === 'google_meet' ? '#34A853' :
-      meeting.meeting_type === 'teams' ? '#5B5FC7' :
       '#6B7280',
     borderColor: 'transparent',
     extendedProps: {
@@ -98,7 +95,6 @@ export default function WorkspaceCalendarPage({
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
-            locale={trLocale}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
@@ -173,22 +169,25 @@ export default function WorkspaceCalendarPage({
               <div>
                 <span className="text-sm font-medium text-gray-500">Toplantı Türü</span>
                 <p className="mt-1">
-                  <span className="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800">
-                    {selectedMeeting.meeting_type}
+                  <span className="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800">
+                    {selectedMeeting.meeting_type === 'google_meet' ? 'Google Meet' : selectedMeeting.meeting_type}
                   </span>
                 </p>
               </div>
 
-              {selectedMeeting.meeting_url && (
+              {(selectedMeeting.google_meet_link || selectedMeeting.meeting_url) && (
                 <div>
                   <span className="text-sm font-medium text-gray-500">Toplantı Linki</span>
                   <a
-                    href={selectedMeeting.meeting_url}
+                    href={selectedMeeting.google_meet_link || selectedMeeting.meeting_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 block text-blue-600 hover:text-blue-700 underline"
+                    className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition"
                   >
-                    {selectedMeeting.meeting_url}
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Toplantıya Katıl
                   </a>
                 </div>
               )}
@@ -199,7 +198,7 @@ export default function WorkspaceCalendarPage({
                   {selectedMeeting.meeting_participants?.length > 0 ? (
                     selectedMeeting.meeting_participants.map((participant: any) => (
                       <div key={participant.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <span className="text-sm text-gray-900">{participant.user?.email || 'Bilinmiyor'}</span>
+                        <span className="text-sm text-gray-900">{participant.user?.email || participant.external_email || 'Kullanıcı'}</span>
                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                           participant.status === 'accepted' ? 'bg-green-100 text-green-800' :
                           participant.status === 'declined' ? 'bg-red-100 text-red-800' :
